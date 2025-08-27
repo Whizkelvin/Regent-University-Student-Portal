@@ -4,18 +4,20 @@ import Logo from "../assets/RUCST_logo (1).png";
 import { AuthContext } from '../context/AuthContext';
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { MdAccountBox } from "react-icons/md";
+import { MdAccountBox, MdConfirmationNumber, MdGrid3X3, MdMarkEmailRead } from "react-icons/md";
 import { FaCircleUser } from "react-icons/fa6";
 
 import { PiExamFill } from "react-icons/pi";
 import {
   FaPhone,
   FaRegCalendarTimes,
+  FaStickyNote,
   FaWallet,
   FaWpforms,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClients";
+import { SiLevelsdotfyi } from "react-icons/si";
 
 
 
@@ -30,7 +32,7 @@ const Dashboard = () => {
     AOS.init({
       duration: 500,
       delay: 300,
-      once: true, 
+      once: false, 
     });
   }, []);
 
@@ -38,7 +40,7 @@ const Dashboard = () => {
     const fetchUser = async () => {
     const { data, error } = await supabase
       .from("students")
-      .select("student_id, programme, year")   
+      .select("student_id, programme, level")   
       .eq("uid", session?.user?.id) 
       .single();
 
@@ -55,13 +57,13 @@ const Dashboard = () => {
   }
 
   }, [session])
-console.log(session);
+console.log(user);
 
 
   return (
-    <div className="px-5 pt-7 min-h-screen">
+    <div className="px-5 pt-7 min-h-screen bg-gray-50/50">
     
-      <div className="flex items-center justify-center gap-2 font-Merriweather bg-gray-100 rounded-md p-4">
+      <div className="flex items-center justify-center gap-2 font-Merriweather bg-gray-200 rounded-md p-4">
         <img src={Logo} alt="Logo" className="w-20" />
         <div className="text-center font-bold">
           <h1 className="text-md">
@@ -75,26 +77,26 @@ console.log(session);
 
       <div
         data-aos="fade-left"
-        className="my-4 bg-gray flex p-4 rounded-xl gap-2 flex-col"
+        className="my-4 bg-gray flex  p-4 rounded-xl gap-2 flex-col bg-green-100"
       >
-        <div className="flex gap-3  items-center">
-          <FaCircleUser  className="text-3xl"/>
-          <div className="flex flex-col">
-            <span>{session.user.email}</span>
-             <span>{user?.student_id}</span>
-             <span>{user?.student_programme}</span>
-             <span>{user?.student_year}</span>
+        <div className=" gap-3  items-center">
+          <p className="text-sm text-gray-400">Student Information</p>
+          <div className="flex flex-col font-semibold">
+            <span className="flex items-center gap-4 my-2"> <MdMarkEmailRead className="text-green-950 text-2xl" />{session.user.email}</span>
+             <span className="flex items-center gap-4 mb-2"><MdConfirmationNumber  className="text-green-950 text-2xl" />{user?.student_id}</span>
+             <span className="flex items-center gap-4 mb-2"><FaStickyNote  className="text-green-950 text-2xl" />{user?.programme}</span>
+             <span className="flex items-center gap-4"><SiLevelsdotfyi  className="text-green-950 text-2xl" />{user?.level}</span>
           </div>
         </div>
         <p className="text-sm text-gray-400">Academic Year</p>
-        <h1 className="font-Merriweather font-black text-green-900 text-xl">
+        <h1 className="font-Merriweather font-black text-green-900 text-md">
           2025/2026, First Semester
         </h1>
       </div>
 
       <button
         data-aos="fade-right"
-        className=" font-semibold my-4 bg-white flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
+        className=" font-semibold my-4 bg-gray-200 flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
       >
         <MdAccountBox className="text-4xl text-green-950" />
         <p> My Account</p>
@@ -102,21 +104,21 @@ console.log(session);
 
       <button
         data-aos="fade-right"
-        className=" font-semibold my-4 bg-white flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
+        className=" font-semibold my-4 bg-gray-200 flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
       >
         <FaWallet className="text-4xl text-green-950" />
         <p> Account Statement</p>
       </button>
       <button
         data-aos="fade-up"
-        className=" font-semibold my-4 bg-white flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
+        className=" font-semibold my-4 bg-gray-200 flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
       >
         <FaWpforms className="text-4xl text-green-950" />
         <p> Courses Registered</p>
       </button>
       <button
         data-aos="fade-up"
-        className=" font-semibold my-4 bg-white flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
+        className=" font-semibold my-4 bg-gray-200 flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
       >
         <FaRegCalendarTimes className="text-4xl text-green-950" />
         <p> Lecture Timetable</p>
@@ -124,14 +126,14 @@ console.log(session);
       <button
       onClick={()=>navigate('/resultslip')}
         data-aos="fade-up"
-        className=" font-semibold my-4 bg-white flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
+        className=" font-semibold my-4 bg-gray-200 flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
       >
         <PiExamFill className="text-4xl text-green-950" />
         <p> My Result Slip</p>
       </button>
       <button
         data-aos="fade-up"
-        className=" font-semibold my-4 bg-white flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
+        className=" font-semibold my-4 bg-gray-200 flex p-4 rounded-xl gap-2 flex-col justify-center items-center w-full"
       >
         <FaPhone className="text-4xl text-green-950" />
         <p> Contact</p>
