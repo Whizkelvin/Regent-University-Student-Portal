@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import banner from "../assets/Regent-banner.jpeg";
-import Logo from "../assets/RUCST_logo (1).jpg";
+import Logo from "../assets/RUCST_logo (1).png";
 import Signin from "./Signin";
 import Signup from "./Signup";
 import { useNavigate } from "react-router-dom";

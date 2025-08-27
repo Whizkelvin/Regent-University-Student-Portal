@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboad";
+import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import { Toaster } from "react-hot-toast";
 

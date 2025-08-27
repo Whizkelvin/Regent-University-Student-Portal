@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "../../supabaseClients";
 import { useNavigate } from "react-router-dom";
 import banner from "../assets/Regent-banner.jpeg";
-import Logo from "../assets/RUCST_logo (1).jpg";
+import Logo from "../assets/RUCST_logo (1).png";
 import toast from "react-hot-toast";
 
 export default function Signup() {
@@ -11,7 +11,7 @@ export default function Signup() {
     email: "",
     password: "",
     student_id: "",
-    program: "",
+    programme: "",
     level: "",
   });
 
@@ -21,53 +21,65 @@ export default function Signup() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+ const handleSignup = async (e) => {
+  e.preventDefault();
 
-    const schoolDomain = "@regent.edu.gh"; 
-    if (!form.email.endsWith(schoolDomain)) {
-      toast.error("You must use your school email address to sign up.");
-      return;
-    }
+  const schoolDomain = "@regent.edu.gh"; 
+  if (!form.email.endsWith(schoolDomain)) {
+    toast.error("You must use your school email address to sign up.");
+    return;
+  }
 
-    // Step 1: Create user in Supabase Auth
-    const { data: signupData, error: signupError } = await supabase.auth.signUp(
-      {
-        email: form.email,
-        password: form.password,
-      }
-    );
+  if (form.student_id.length !== 8) {
+    toast.error("Student ID must be exactly 9 digits");
+    return;
+  }
 
-    if (signupError) {
-      toast.error(signupError.message);
-      return;
-    }
-
-    const user = signupData.user;
-    if (!user) {
-      toast.error("User not created.");
-      return;
-    }
-
-    // Step 2: Insert student info into students table
-    const { error: insertError } = await supabase.from("students").insert([
-      {
-        uid: user.id,
+  // Step 1: Create user in Supabase Auth and add metadata
+  const { data: signupData, error: signupError } = await supabase.auth.signUp({
+    email: form.email,
+    password: form.password,
+    options: {
+      data: {
         full_name: form.full_name,
         student_id: form.student_id,
-        program: form.program,
+        programme: form.programme,
         level: form.level,
       },
-    ]);
+    },
+  });
 
-    if (insertError) {
-     toast.error(insertError.message);
-      return;
-    }
+  if (signupError) {
+    toast.error(signupError.message);
+    return;
+  }
 
-    toast.success("Signup successful! Check your email to verify your account.");
-    navigate("/signin"); 
-  };
+  const user = signupData.user;
+  if (!user) {
+    toast.error("User not created.");
+    return;
+  }
+
+  // Step 2: Insert student info into students table
+  const { error: insertError } = await supabase.from("students").insert([
+    {
+      uid: user.id,               // link to Auth user
+      full_name: form.full_name,
+      student_id: form.student_id,
+      programme: form.programme,
+      level: form.level,
+    },
+  ]);
+
+  if (insertError) {
+    toast.error("Failed to save student info: " + insertError.message);
+    return;
+  }
+
+  toast.success("Signup successful! Check your email to verify your account.");
+  navigate("/");
+};
+
 
   return (
     <div className="mx-5 md:mx-0 md:w-full">
@@ -123,16 +135,16 @@ export default function Signup() {
             className="w-full p-4 bg-gray-100 border-gray-600 border my-2 rounded-md"
           />
           <input
-            type="text"
+            type="number"
             name="student_id"
             placeholder="School ID (9 digits)"
-            pattern="\d{9}"
+            
             onChange={handleChange}
             required
             className="w-full p-4 bg-gray-100 border-gray-600 border my-2 rounded-md"
           />
           <select
-            name="program"
+            name="programme"
             onChange={handleChange}
             required
             className="w-full p-4 bg-gray-100 border-gray-600 border my-2 rounded-md"
